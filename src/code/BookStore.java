@@ -1,5 +1,8 @@
 /**
  * Represents a BookStore object.
+ *  * @author Grace Jung
+ *  * @author Joseph Louwerse
+ *  * @version 1.0
  */
 public class BookStore
 {
