@@ -54,4 +54,15 @@ public class Novel {
     public int getYearPublished() {
         return yearPublished;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append("Title: " + title + "\n");
+        sb.append("Author: " + authorName + "\n");
+        sb.append("Year Published: " + yearPublished + "\n");
+        return sb.toString();
+    }
 }

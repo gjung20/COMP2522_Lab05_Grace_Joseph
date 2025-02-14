@@ -3,10 +3,9 @@
 // see if we need to make listOfNovels final
 // populate data
 // see if we are allowed to use a special comparator class
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Represents a BookStore object.
@@ -16,6 +15,9 @@ import java.util.List;
  */
 public class BookStore
 {
+
+
+
 
     private final String name;
     private ArrayList<Novel> listOfNovels = new ArrayList<>();
@@ -29,6 +31,12 @@ public class BookStore
      */
     public BookStore(final String name)
     {
+
+        HashMap<String, Novel> novelMap = new HashMap<>();
+        Set<String> keySet;
+        Iterator<String> iterator;
+        Iterator<String> keyListIterator;
+
         this.name = name;
 
         listOfNovels.add(new Novel("The Adventures of Augie March", "Saul Bellow", 1953));
@@ -132,7 +140,56 @@ public class BookStore
         listOfNovels.add(new Novel("White Teeth", "Zadie Smith", 2000));
         listOfNovels.add(new Novel("Wide Sargasso Sea", "Jean Rhys", 1966));
 
+        //--- convert listofNovels into novelMap ---
+        novelMap = (HashMap<String, Novel>) convertListToHashMap(listOfNovels);
 
+        //--- initialize keyset and iterator
+        keySet = novelMap.keySet();
+        iterator = keySet.iterator();
+
+        List<String> keyList = new ArrayList<>(keySet);
+        keyListIterator = keyList.iterator();
+
+        System.out.println("-----PART 2 -----");
+        //--call fn ---
+        while (iterator.hasNext()) {
+            String title = iterator.next();
+            // Do something with the 'title', e.g., print it
+            System.out.println(title);
+        }
+
+        novelMap.entrySet().removeIf(
+                entry -> entry.getKey().toLowerCase().contains("the".toLowerCase()));
+
+        Collections.sort(keyList);
+
+        System.out.println("-----PART 2 Sorted without the-----");
+
+        while (keyListIterator.hasNext()) {
+            String title = keyListIterator.next();
+            // Do something with the 'title', e.g., print it
+            System.out.println(title);
+        }
+
+        
+    }
+//
+//    public BookStore(String name, Novel novel)
+//    {
+//        HashMap<String, Novel> bookInventory = new HashMap();
+//        this.name = name;
+//    }
+
+    /**
+     * Converts a given Novel ArrayList and converts it to a map.
+     *
+     * @param list represents the ArrayList of novels
+     * @return the list of novels as a map
+     */
+    public Map<String, Novel> convertListToHashMap(ArrayList<Novel> list) {
+        Map<String, Novel> map = list.stream()
+                .collect(Collectors.toMap(Novel::getTitle, Function.identity()));
+        return map;
     }
 
     /**
@@ -200,7 +257,8 @@ public class BookStore
      */
     boolean isThereABookWrittenIn(int year)
     {
-        return listOfNovels.stream().anyMatch(novel -> novel.getYearPublished() == year);
+        return listOfNovels.stream().anyMatch(
+                novel -> novel.getYearPublished() == year);
     }
 
     /**
@@ -212,7 +270,8 @@ public class BookStore
     long howManyBooksContain(String word)
     {
         return listOfNovels.stream()
-                .filter(novel -> novel.getTitle().toLowerCase().contains(word.toLowerCase()))
+                .filter(
+                        novel -> novel.getTitle().toLowerCase().contains(word.toLowerCase()))
                 .count();
     }
 
@@ -225,7 +284,10 @@ public class BookStore
      */
     double whichPercentWrittenBetween(int first, int last)
     {
-        long count = listOfNovels.stream().filter(novel -> novel.getYearPublished() >= first && novel.getYearPublished() <= last).count();
+        long count = listOfNovels.stream().filter(
+                novel -> novel.getYearPublished() >=
+                        first && novel.getYearPublished() <=
+                        last).count();
         return count * 100.0 / listOfNovels.size();
     }
 
