@@ -5,6 +5,7 @@
 // see if we are allowed to use a special comparator class
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -150,7 +151,9 @@ public class BookStore
      */
     void printBookTitle(String title)
     {
-
+        listOfNovels.stream()
+                .filter(novel -> novel.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .forEach(novel -> System.out.println(novel.getTitle()));
     }
 
     /**
@@ -174,15 +177,20 @@ public class BookStore
      */
     void printGroupByDecade(int decade)
     {
-
+        listOfNovels.stream()
+                .filter(novel -> novel.getYearPublished() / 10 == decade / 10)
+                .forEach(System.out::println);
     }
 
     /**
      * Find the longest title in the bookstore.
      */
-    void getLongest()
+    String getLongest()
     {
-
+        return listOfNovels.stream()
+                .max(Comparator.comparingInt(n -> n.getTitle().length()))
+                .map(Novel::getTitle)
+                .orElse("No books available");
     }
 
     /**
@@ -192,7 +200,7 @@ public class BookStore
      */
     boolean isThereABookWrittenIn(int year)
     {
-        return false;
+        return listOfNovels.stream().anyMatch(novel -> novel.getYearPublished() == year);
     }
 
     /**
@@ -201,9 +209,11 @@ public class BookStore
      * @param word
      * @return the amount of books, as an int.
      */
-    int howManyBooksContain(String word)
+    long howManyBooksContain(String word)
     {
-        return 0;
+        return listOfNovels.stream()
+                .filter(novel -> novel.getTitle().toLowerCase().contains(word.toLowerCase()))
+                .count();
     }
 
     /**
@@ -213,9 +223,10 @@ public class BookStore
      * @param last
      * @return percentage of books, as an integer
      */
-    int whichPercentWrittenBetween(int first, int last)
+    double whichPercentWrittenBetween(int first, int last)
     {
-        return 0;
+        long count = listOfNovels.stream().filter(novel -> novel.getYearPublished() >= first && novel.getYearPublished() <= last).count();
+        return count * 100.0 / listOfNovels.size();
     }
 
     /**
@@ -237,8 +248,9 @@ public class BookStore
      */
     List<Novel> getBooksThisLength(int titleLength)
     {
-
-        return null;
+        return listOfNovels.stream()
+                .filter(novel -> novel.getTitle().length() == titleLength)
+                .toList();
     }
 
     /**
