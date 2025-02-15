@@ -158,11 +158,15 @@ public class BookStore
             System.out.println(title);
         }
 
+        System.out.println("WAH");
+
 // Remove books where "The" appears as a whole word (case-insensitive)
-        novelMap.entrySet().removeIf(entry -> {
-            String title = entry.getKey().toLowerCase();
+    keySet.removeIf(entry -> {
+            String title = entry.toLowerCase();
             return title.startsWith("the ") || title.matches(".*\\bthe\\b.*");
         });
+
+    keyList = new ArrayList<>(keySet);
 
 // Convert keySet to List and sort it
         Collections.sort(keyList);
