@@ -158,27 +158,20 @@ public class BookStore
             System.out.println(title);
         }
 
-        novelMap.entrySet().removeIf(
-                entry -> entry.getKey().toLowerCase().contains("the".toLowerCase()));
+// Remove books where "The" appears as a whole word (case-insensitive)
+        novelMap.entrySet().removeIf(entry -> {
+            String title = entry.getKey().toLowerCase();
+            return title.startsWith("the ") || title.matches(".*\\bthe\\b.*");
+        });
 
+// Convert keySet to List and sort it
         Collections.sort(keyList);
 
+// Print sorted books without "The"
         System.out.println("-----PART 2 Sorted without the-----");
+        keyList.forEach(System.out::println);
 
-        while (keyListIterator.hasNext()) {
-            String title = keyListIterator.next();
-            // Do something with the 'title', e.g., print it
-            System.out.println(title);
-        }
-
-        
     }
-//
-//    public BookStore(String name, Novel novel)
-//    {
-//        HashMap<String, Novel> bookInventory = new HashMap();
-//        this.name = name;
-//    }
 
     /**
      * Converts a given Novel ArrayList and converts it to a map.
@@ -191,7 +184,6 @@ public class BookStore
                 .collect(Collectors.toMap(Novel::getTitle, Function.identity()));
         return map;
     }
-
     /**
      * Print all titles in UPPERCASE.
      */
